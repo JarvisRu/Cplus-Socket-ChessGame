@@ -5,7 +5,9 @@
 #include<assert.h>
 #include<iostream>
 #include<string>
+
 using namespace std;
+
 
 
 int board[15][29]= {
@@ -25,7 +27,56 @@ int board[15][29]= {
         {5,0,4,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,3,0,5},
         {1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
-void paint(){
+// do paint
+void paint(int mode,int mov, int to){
+    // server
+    if(mode==1){
+
+    }
+    // client
+    else if(mode==2){
+        // has mov
+        if(to!=0){
+
+        }
+        //no mov
+        else{
+            if(mov==1){
+                if(board[0][0]!=7){
+                    board[0][0] = 6;
+                }
+            }
+            else if(mov==2){
+                if(board[0][8]!=7){
+                    board[0][8] = 6;
+                }
+            }
+            else if(mov==3){
+                if(board[0][16]!=7){
+                    board[0][16] = 6;
+                }
+            }
+            else if(mov==4){
+
+            }
+            else if(mov==2){
+
+            }
+            else if(mov==3){
+
+            }
+            else if(mov==7){
+
+            }
+            else if(mov==8){
+
+            }
+            else if(mov==9){
+
+            }
+        }
+    }
+    // paint
     for(int row=0; row<15 ; row++){
         for(int col=0; col<29 ; col++){
             switch(board[row][col]){
@@ -47,11 +98,21 @@ void paint(){
                 case 5:
                     cout<<"︱";
                     break;
+                // client
+                case 6:
+                    cout<<"▲";
+                    break;
+                // server
+                case 7:
+                    cout<<"★";
+                    break;
+
             }
         }
         cout<<endl;
     }
 }
+
 
 
 int main(){
@@ -82,22 +143,63 @@ int main(){
 
         //規則說明
         cout<<"【三子棋】"<<endl;
+        cout<<"================================================================================="<<endl;
         cout<<"1. 棋盤如下"<<endl;
         cout<<"2. 雙方各執三子，依序放入棋盤中，三子全下完後，才可移動"<<endl;
         cout<<"3. 移動方式可直走，橫走，也可對角線走，先三子連成一線者獲勝（直線or斜線皆可）"<<endl;
-        paint();
+        cout<<"4. 下棋方式：輸入　1~9(代表點) + 0 + 0"<<endl;
+        cout<<"  EX: 1 0 0 → 下在點1 (若輸入已存在於棋盤的自己棋→視為浪費一局)"<<endl;
+        cout<<"  1 2 3\n  4 5 6\n  7 8 9\n";
+        cout<<"5. 移動方式：輸入 起始點 + 0 + 移動到的點"<<endl;
+        cout<<"  EX: 1 0 5 → 點1移動到點5"<<endl;
+        cout<<"6. Player代表:▲  Server代表:★"<<endl;
+        cout<<"================================================================================="<<endl;
+        paint(0,0,0);
         cout<<"開始遊戲 ? (1)開始 (0)結束 :";
-        int start=0;
+
+        int start = 0;
         int over = 0;
+        int run = 0;
+        int chess = 0;
         char *sendbuf;
+        char mov[3];
+
         while(cin>>start){
            // start the game
             if(start==1){
                 sendbuf="玩家進入";
                 send(client_socket, sendbuf, (int)strlen(sendbuf), 0);
+
                 Sleep(1000);
                 system("cls");
-                paint();
+
+                paint(0,0,0);
+                ++run;
+                while(!over){
+                    // player run
+                    if(run%2==1){
+                        cout<<"動作：";
+                        cin>>mov[0]>>mov[1]>>mov[2];
+                        // has mov
+                        if((int)mov[2]-48!=0){
+
+                        }
+                        // no mov
+                        else{
+                            system("cls");
+                            paint(2,(int)mov[0]-48,0);
+                        }
+                        send(client_socket,mov,3, 0);
+                        ++chess;
+                        ++run;
+                    }
+                    // client run
+                    else{
+
+                    }
+
+                }
+
             }
             // end the game
             else if(start==0){

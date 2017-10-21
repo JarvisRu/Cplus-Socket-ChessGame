@@ -99,14 +99,20 @@ int main(){
         sendbuf = "Connect successfully to server¡I";
         send(sConnect, sendbuf, (int)strlen(sendbuf), 0);
 
-        char message[100];
-        ZeroMemory(message, 100);
+        char message[4];
+        ZeroMemory(message, 4);
         recv(sConnect,message,sizeof(message),0);
         cout<<message;
 
         Sleep(1000);
         system("cls");
         paint();
+
+        char mov[3];
+        ZeroMemory(mov, 3);
+        recv(sConnect,mov,3,0);
+        cout<<mov[0]<<" "<<mov[1];
+
 
     }
 

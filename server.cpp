@@ -8,8 +8,10 @@
 using namespace std;
 
 // declare function
-void paint(int,int,int);
-bool win(int);
+void paint(int,int,int);        // paint board
+bool judge(int,int,int,int);    // judge if the input is correct and no conflict
+bool win();                     // judge if someone win
+void reBoard();                 // reassign value of board
 
 int board[15][29]= {
         {1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -97,46 +99,82 @@ int main(){
                 while(!over){
                     // your run
                     if(run%2==0){
-                        cout<<"你的局："<<endl;
-                        system("pause");
+                        cout<<"你的局(★)：";
+                        cin>>mov[0]>>mov[1]>>mov[2];
+
+                        system("cls");
+
+                        // has mov
+                        if((int)mov[2]-48!=0 && chess_s==3){
+                            paint(1,(int)mov[0]-48,(int)mov[2]-48);
+                        }
+                        // no mov
+                        else if(chess_s!=3){
+                            paint(1,(int)mov[0]-48,0);
+                        }
+                        send(sConnect,mov,strlen(mov), 0);
+
+                        chess_s = (chess_s < 3)? chess_s+1 : 3;
+                        ++run;
+
+                        // judge if win
+                        if(win()==true){
+                            cout<<endl<<"You win !! Player lose ~"<<endl;
+
+                            Sleep(3000);
+                            over = true;
+                            reBoard();
+                        }
                     }
                     // player run
                     else{
-                        cout<<"對方局"<<endl;
-
+                        cout<<"對方局(▲)"<<endl;
                         // get  message
                         char mov2[10];
                         ZeroMemory(mov2, 10);
                         recv(sConnect,mov2,sizeof(mov2),0);
+
                         system("cls");
 
                         // has mov
-                        if((int)mov2[2]-48!=0){
-                            paint(2,(int)mov2[0]-48,(int)mov[2]-48);
+                        if((int)mov2[2]-48!=0 && chess_c==3){
+                            paint(2,(int)mov2[0]-48,(int)mov2[2]-48);
                         }
                         // no mov
-                        else{
+                        else if(chess_c!=3){
                             paint(2,(int)mov2[0]-48,0);
                         }
-                        chess_c = (chess_c<=3)? ++chess_c : 3;
+
+                        chess_c = (chess_c < 3)? chess_c+1 : 3;
                         ++run;
+
+                        // judge if win
+                        if(win()==true){
+                            cout<<endl<<"Player win !! You lose ~"<<endl;
+
+                            Sleep(3000);
+                            over = true;
+                            reBoard();
+                        }
                     }
                 }
             }
             // player out
             else{
                 cout<<endl<<"Player leave ! Program will be closed !!";
+
                 Sleep(1000);
                 break;
             }
+            cout<<"等待玩家進入遊戲.."<<endl;
         }
+        closesocket(sConnect);
     }
     return 0;
 }
 
 // do paint
 void paint(int mode,int mov, int to){
-
     // assign value : start point & end point
     int s_x,s_y,e_x,e_y;
     switch(mov){
@@ -284,5 +322,36 @@ void paint(int mode,int mov, int to){
             }
         }
         cout<<endl;
+    }
+}
+
+bool win(){
+    // scan row
+    if(board[0][0]==6 && board[0][8]==6 && board[0][16]==6)         return true;
+    else if(board[7][0]==6 && board[7][8]==6 && board[7][16]==6)    return true;
+    else if(board[13][0]==6 && board[13][8]==6 && board[13][16]==6) return true;
+    else if(board[0][0]==7 && board[0][8]==7 && board[0][16]==7)    return true;
+    else if(board[7][0]==7 && board[7][8]==7 && board[7][16]==7)    return true;
+    else if(board[13][0]==7 && board[13][8]==7 && board[13][16]==7) return true;
+    // scan col
+    else if(board[0][0]==6 && board[7][0]==6 && board[13][0]==6)    return true;
+    else if(board[0][8]==6 && board[7][8]==6 && board[13][8]==6)    return true;
+    else if(board[0][16]==6 && board[7][16]==6 && board[13][16]==6) return true;
+    else if(board[0][0]==7 && board[7][0]==7 && board[13][0]==7)    return true;
+    else if(board[0][8]==7 && board[7][8]==7 && board[13][8]==7)    return true;
+    else if(board[0][16]==7 && board[7][16]==7 && board[13][16]==7) return true;
+    // scan  slash
+    else if(board[0][0]==6 && board[7][8]==6 && board[13][16]==6)   return true;
+    else if(board[0][16]==6 && board[7][8]==6 && board[13][0]==6)   return true;
+    else if(board[0][0]==7 && board[7][8]==7 && board[13][16]==7)   return true;
+    else if(board[0][16]==7 && board[7][8]==7 && board[13][0]==7)   return true;
+    else return false;
+}
+
+void reBoard(){
+    for(int i=0 ; i<=16 ; i+=8){
+        board[0][i] = 1;
+        board[7][i] = 1;
+        board[14][i] = 1;
     }
 }

@@ -10,7 +10,8 @@ using namespace std;
 
 // declare function
 void paint(int,int,int);
-bool win(int);
+bool win();
+void reBoard();
 
 int board[15][29]= {
         {1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -77,6 +78,7 @@ int main(){
 
         char *sendbuf = new char[100];
         int start = 0;
+        bool over;
 
         while(cin>>start){
            // start the game
@@ -89,39 +91,71 @@ int main(){
                 system("cls");
                 paint(0,0,0);
 
-                int over = 0;
+
                 int run = 1;
                 int chess_s = 0, chess_c = 0;
                 char mov[3];
-
+                over = false;
                 // start to play
                 while(!over){
                     // your run
                     if(run%2==1){
-                        cout<<"你的局：";
+                        cout<<"你的局(▲)：";
                         cin>>mov[0]>>mov[1]>>mov[2];
+
                         system("cls");
+
                         // has mov
-                        if((int)mov[2]-48!=0){
+                        if((int)mov[2]-48!=0 && chess_c==3){
                             paint(2,(int)mov[0]-48,(int)mov[2]-48);
                         }
                         // no mov
-                        else{
+                        else if(chess_c!=3){
                             paint(2,(int)mov[0]-48,0);
                         }
                         send(client_socket,mov,strlen(mov), 0);
-                        chess_c = (chess_c<=3)? ++chess_c : 3;
+
+                        chess_c = (chess_c < 3)? chess_c+1 : 3;
                         ++run;
+
+                        // judge if win
+                        if(win()==true){
+                            cout<<endl<<"You win !! Server lose ~"<<endl;
+
+                            Sleep(3000);
+                            over = true;
+                            reBoard();
+                        }
                     }
                     // player run
                     else{
-                        cout<<"對方局"<<endl;
-                        system("pause");
+                        cout<<"對方局(★)"<<endl;
+                        // get  message
+                        char mov2[10];
+                        ZeroMemory(mov2, 10);
+                        recv(client_socket,mov2,sizeof(mov2),0);
 
-                        // get message
+                        system("cls");
+                        // has mov
+                        if((int)mov2[2]-48!=0 && chess_s==3){
+                            paint(1,(int)mov2[0]-48,(int)mov2[2]-48);
+                        }
+                        // no mov
+                        else if(chess_s!=3){
+                            paint(1,(int)mov2[0]-48,0);
+                        }
 
-                        //system("cls");
+                        chess_s = (chess_s < 3)? chess_s+1 : 3;
                         ++run;
+
+                        // judge if win
+                        if(win()==true){
+                            cout<<endl<<"Server win !! You lose ~"<<endl;
+
+                            Sleep(3000);
+                            over = true;
+                            reBoard();
+                        }
                     }
                 }
             }
@@ -138,6 +172,10 @@ int main(){
             // if input wrong
             else{
                 cout<<"請輸入 數字1(開始) 或 數字0(結束):";
+            }
+
+            if(over==true){
+                cout<<"繼續遊戲 ? (1)開始 (0)結束 :";
             }
         }
     }
@@ -301,5 +339,36 @@ void paint(int mode,int mov, int to){
             }
         }
         cout<<endl;
+    }
+}
+
+bool win(){
+    // scan row
+    if(board[0][0]==6 && board[0][8]==6 && board[0][16]==6)         return true;
+    else if(board[7][0]==6 && board[7][8]==6 && board[7][16]==6)    return true;
+    else if(board[14][0]==6 && board[14][8]==6 && board[14][16]==6) return true;
+    else if(board[0][0]==7 && board[0][8]==7 && board[0][16]==7)    return true;
+    else if(board[7][0]==7 && board[7][8]==7 && board[7][16]==7)    return true;
+    else if(board[14][0]==7 && board[14][8]==7 && board[14][16]==7) return true;
+    // scan col
+    else if(board[0][0]==6 && board[7][0]==6 && board[14][0]==6)    return true;
+    else if(board[0][8]==6 && board[7][8]==6 && board[14][8]==6)    return true;
+    else if(board[0][16]==6 && board[7][16]==6 && board[14][16]==6) return true;
+    else if(board[0][0]==7 && board[7][0]==7 && board[14][0]==7)    return true;
+    else if(board[0][8]==7 && board[7][8]==7 && board[14][8]==7)    return true;
+    else if(board[0][16]==7 && board[7][16]==7 && board[14][16]==7) return true;
+    // scan  slash
+    else if(board[0][0]==6 && board[7][8]==6 && board[14][16]==6)   return true;
+    else if(board[0][16]==6 && board[7][8]==6 && board[14][0]==6)   return true;
+    else if(board[0][0]==7 && board[7][8]==7 && board[14][16]==7)   return true;
+    else if(board[0][16]==7 && board[7][8]==7 && board[14][0]==7)   return true;
+    else return false;
+}
+
+void reBoard(){
+    for(int i=0 ; i<=16 ; i+=8){
+        board[0][i] = 1;
+        board[7][i] = 1;
+        board[14][i] = 1;
     }
 }

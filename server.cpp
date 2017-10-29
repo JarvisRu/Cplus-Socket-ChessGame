@@ -91,7 +91,7 @@ int main(){
                 system("cls");
                 paint(0,0,0);
 
-                int over = 0;
+                bool over = false;
                 int run = 1;
                 int chess_s = 0, chess_c = 0;
                 char mov[3];
@@ -120,10 +120,8 @@ int main(){
                         // judge if win
                         if(win()==true){
                             cout<<endl<<"You win !! Player lose ~"<<endl;
-
                             Sleep(3000);
                             over = true;
-                            reBoard();
                         }
                     }
                     // player run
@@ -151,10 +149,8 @@ int main(){
                         // judge if win
                         if(win()==true){
                             cout<<endl<<"Player win !! You lose ~"<<endl;
-
                             Sleep(3000);
                             over = true;
-                            reBoard();
                         }
                     }
                 }
@@ -162,11 +158,11 @@ int main(){
             // player out
             else{
                 cout<<endl<<"Player leave ! Program will be closed !!";
-
-                Sleep(1000);
+                Sleep(2000);
                 break;
             }
             cout<<"等待玩家進入遊戲.."<<endl;
+            reBoard();
         }
         closesocket(sConnect);
     }

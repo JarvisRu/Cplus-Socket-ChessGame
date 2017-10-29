@@ -165,7 +165,7 @@ int main(){
                 sendbuf="ª±®aÂ÷¶}";
                 send(client_socket, sendbuf, (int)strlen(sendbuf), 0);
 
-                Sleep(1000);
+                Sleep(2000);
                 closesocket(client_socket);
                 return 0;
             }

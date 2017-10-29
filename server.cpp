@@ -7,6 +7,10 @@
 #include<string>
 using namespace std;
 
+// declare function
+void paint(int,int,int);
+bool win(int);
+
 int board[15][29]= {
         {1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0},
         {5,0,3,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,4,0,5},
@@ -24,33 +28,6 @@ int board[15][29]= {
         {5,0,4,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,3,0,5},
         {1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
-void paint(){
-    for(int row=0; row<15 ; row++){
-        for(int col=0; col<29 ; col++){
-            switch(board[row][col]){
-                case 0:
-                    cout<<" ";
-                    break;
-                case 1:
-                    cout<<"◇";
-                    break;
-                case 2:
-                    cout<<"—";
-                    break;
-                case 3:
-                    cout<<"＼";
-                    break;
-                case 4:
-                    cout<<"／";
-                    break;
-                case 5:
-                    cout<<"︱";
-                    break;
-            }
-        }
-        cout<<endl;
-    }
-}
 
 int main(){
     WSADATA wsaData;
@@ -99,22 +76,213 @@ int main(){
         sendbuf = "Connect successfully to server！";
         send(sConnect, sendbuf, (int)strlen(sendbuf), 0);
 
-        char message[4];
-        ZeroMemory(message, 4);
-        recv(sConnect,message,sizeof(message),0);
-        cout<<message;
 
-        Sleep(1000);
-        system("cls");
-        paint();
+        while(true){
+            char message[100];
+            ZeroMemory(message, 100);
+            recv(sConnect,message,sizeof(message),0);
+            cout<<message;
+            // player in
+            if(message!="Player in !!"){
+                // initialize game setting
+                Sleep(1000);
+                system("cls");
+                paint(0,0,0);
 
-        char mov[3];
-        ZeroMemory(mov, 3);
-        recv(sConnect,mov,3,0);
-        cout<<mov[0]<<" "<<mov[1];
+                int over = 0;
+                int run = 1;
+                int chess_s = 0, chess_c = 0;
+                char mov[3];
+                // start to play
+                while(!over){
+                    // your run
+                    if(run%2==0){
+                        cout<<"你的局："<<endl;
+                        system("pause");
+                    }
+                    // player run
+                    else{
+                        cout<<"對方局"<<endl;
 
+                        // get  message
+                        char mov2[10];
+                        ZeroMemory(mov2, 10);
+                        recv(sConnect,mov2,sizeof(mov2),0);
+                        system("cls");
 
+                        // has mov
+                        if((int)mov2[2]-48!=0){
+                            paint(2,(int)mov2[0]-48,(int)mov[2]-48);
+                        }
+                        // no mov
+                        else{
+                            paint(2,(int)mov2[0]-48,0);
+                        }
+                        chess_c = (chess_c<=3)? ++chess_c : 3;
+                        ++run;
+                    }
+                }
+            }
+            // player out
+            else{
+                cout<<endl<<"Player leave ! Program will be closed !!";
+                Sleep(1000);
+                break;
+            }
+        }
+    }
+    return 0;
+}
+
+// do paint
+void paint(int mode,int mov, int to){
+
+    // assign value : start point & end point
+    int s_x,s_y,e_x,e_y;
+    switch(mov){
+        case 1:
+            s_x = 0;
+            s_y = 0;
+            break;
+        case 2:
+            s_x = 8;
+            s_y = 0;
+            break;
+        case 3:
+            s_x = 16;
+            s_y = 0;
+            break;
+        case 4:
+            s_x = 0;
+            s_y = 7;
+            break;
+        case 5:
+            s_x = 8;
+            s_y = 7;
+            break;
+        case 6:
+            s_x = 16;
+            s_y = 7;
+            break;
+        case 7:
+            s_x = 0;
+            s_y = 14;
+            break;
+        case 8:
+            s_x = 8;
+            s_y = 14;
+            break;
+        case 9:
+            s_x = 16;
+            s_y = 14;
+            break;
+    }
+    if(to!=0){
+        switch(to){
+            case 1:
+                e_x = 0;
+                e_y = 0;
+                break;
+            case 2:
+                e_x = 8;
+                e_y = 0;
+                break;
+            case 3:
+                e_x = 16;
+                e_y = 0;
+                break;
+            case 4:
+                e_x = 0;
+                e_y = 7;
+                break;
+            case 5:
+                e_x = 8;
+                e_y = 7;
+                break;
+            case 6:
+                e_x = 16;
+                e_y = 7;
+                break;
+            case 7:
+                e_x = 0;
+                e_y = 14;
+                break;
+            case 8:
+                e_x = 8;
+                e_y = 14;
+                break;
+            case 9:
+                e_x = 16;
+                e_y = 14;
+                break;
+        }
     }
 
-    return 0;
+    // server
+    if(mode==1){
+        // has mov
+        if(to!=0){
+            if(board[s_y][s_x] == 7 && board[e_y][e_x] == 1){
+                board[s_y][s_x] = 1;
+                board[e_y][e_x] = 7;
+            }
+        }
+        // no mov
+        else{
+            if(board[s_y][s_x] == 1){
+                board[s_y][s_x] = 7;
+            }
+        }
+    }
+    // client
+    else if(mode==2){
+        // has mov
+        if(to!=0){
+            if(board[s_y][s_x] == 6 && board[e_y][e_x] == 1){
+                board[s_y][s_x] = 1;
+                board[e_y][e_x] = 6;
+            }
+        }
+        // no mov
+        else{
+            if(board[s_y][s_x] == 1){
+                board[s_y][s_x] = 6;
+            }
+        }
+    }
+    // paint
+    for(int row=0; row<15 ; row++){
+        for(int col=0; col<29 ; col++){
+            switch(board[row][col]){
+                case 0:
+                    cout<<" ";
+                    break;
+                case 1:
+                    cout<<"◇";
+                    break;
+                case 2:
+                    cout<<"—";
+                    break;
+                case 3:
+                    cout<<"＼";
+                    break;
+                case 4:
+                    cout<<"／";
+                    break;
+                case 5:
+                    cout<<"︱";
+                    break;
+                // client
+                case 6:
+                    cout<<"▲";
+                    break;
+                // server
+                case 7:
+                    cout<<"★";
+                    break;
+
+            }
+        }
+        cout<<endl;
+    }
 }

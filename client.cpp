@@ -9,9 +9,10 @@
 using namespace std;
 
 // declare function
-void paint(int,int,int);
-bool win();
-void reBoard();
+void paint(int,int,int);        // paint board
+bool check(int,int,int,int);    // check if the input is correct and no conflict
+bool win();                     // judge if someone win
+void reBoard();                 // reassign value of board
 
 int board[15][29]= {
         {1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -30,6 +31,8 @@ int board[15][29]= {
         {5,0,4,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,3,0,5},
         {1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
+// assign value : start point & end point
+int s_x,s_y,e_x,e_y;
 
 int main(){
     WSADATA wsaData;
@@ -68,7 +71,7 @@ int main(){
         cout<<"2. 雙方各執三子，依序放入棋盤中，三子全下完後，才可移動"<<endl;
         cout<<"3. 移動方式可直走，橫走，也可對角線走（但只能移動到相鄰的），先三子連成一線者獲勝（直線or斜線皆可）"<<endl;
         cout<<"4. 下棋方式：輸入　1~9(代表點) + 0 + 0"<<endl;
-        cout<<"  EX: 1 0 0 → 下在點1 (若輸入已存在於棋盤的自己棋→視為浪費一局)"<<endl;
+        cout<<"  EX: 1 0 0 → 下在點1"<<endl;
         cout<<"  1 2 3\n  4 5 6\n  7 8 9\n";
         cout<<"5. 移動方式：輸入 起始點 + 0 + 移動到的點"<<endl;
         cout<<"  EX: 1 0 5 → 點1移動到點5"<<endl;
@@ -101,20 +104,21 @@ int main(){
                 while(!over){
                     // your run
                     if(run%2==1){
-                        cout<<"你的局(▲)：";
-                        cin>>mov[0]>>mov[1]>>mov[2];
+                        if(run>=7) cout<<"(You can move now)"<<endl;
+                        while(true){
+                            cout<<"你的局(▲)：";
+                            cin>>mov[0]>>mov[1]>>mov[2];
 
-                        system("cls");
-
-                        // has mov
-                        if((int)mov[2]-48!=0 && chess_c==3){
-                            paint(2,(int)mov[0]-48,(int)mov[2]-48);
+                            if(check(2,(int)mov[0]-48,(int)mov[2]-48,chess_c)){
+                                system("cls");
+                                paint(2,(int)mov[0]-48,(int)mov[2]-48);
+                                send(client_socket,mov,strlen(mov), 0);
+                                break;
+                            }
+                            else{
+                                cout<<"輸入有誤!! 請重新輸入"<<endl;
+                            }
                         }
-                        // no mov
-                        else if(chess_c!=3){
-                            paint(2,(int)mov[0]-48,0);
-                        }
-                        send(client_socket,mov,strlen(mov), 0);
 
                         chess_c = (chess_c < 3)? chess_c+1 : 3;
                         ++run;
@@ -122,7 +126,6 @@ int main(){
                         // judge if win
                         if(win()==true){
                             cout<<endl<<"You win !! Server lose ~"<<endl;
-
                             Sleep(3000);
                             over = true;
                             reBoard();
@@ -135,15 +138,9 @@ int main(){
                         char mov2[10];
                         ZeroMemory(mov2, 10);
                         recv(client_socket,mov2,sizeof(mov2),0);
-
-                        system("cls");
-                        // has mov
-                        if((int)mov2[2]-48!=0 && chess_s==3){
+                        if(check(1,(int)mov2[0]-48,(int)mov2[2]-48,chess_s)){
+                            system("cls");
                             paint(1,(int)mov2[0]-48,(int)mov2[2]-48);
-                        }
-                        // no mov
-                        else if(chess_s!=3){
-                            paint(1,(int)mov2[0]-48,0);
                         }
 
                         chess_s = (chess_s < 3)? chess_s+1 : 3;
@@ -152,7 +149,6 @@ int main(){
                         // judge if win
                         if(win()==true){
                             cout<<endl<<"Server win !! You lose ~"<<endl;
-
                             Sleep(3000);
                             over = true;
                             reBoard();
@@ -183,11 +179,8 @@ int main(){
     return 0;
 }
 
-// do paint
-void paint(int mode,int mov, int to){
-
-    // assign value : start point & end point
-    int s_x,s_y,e_x,e_y;
+bool check(int mode, int mov, int to, int chessNum){
+    // get the coord of point
     switch(mov){
         case 1:
             s_x = 0;
@@ -266,39 +259,66 @@ void paint(int mode,int mov, int to){
                 break;
         }
     }
+    // before can move
+    if(chessNum < 3){
+        // can't move
+        if(to!=0){
+            return false;
+        }
+        // can't set on chess which is set
+        if(board[s_y][s_x]!=1){
+            return false;
+        }
+    }
+    // can move
+    else{
+        // have to move
+        if(to==0){
+            return false;
+        }
+        // can't move others chess
+        if((mode==1 && board[s_y][s_x]==6) || (mode==2 && board[s_y][s_x]==7)){
+            return false;
+        }
+        // can't move to somewhere which is set
+        if(board[e_y][e_x]!=1){
+            return false;
+        }
+        // just can move to neighbor
+        if(abs(e_y-s_y)>7 || abs(e_x-s_x)>8){
+            return false;
+        }
+    }
+    return true;
+}
+
+
+// do paint
+void paint(int mode,int mov, int to){
     // server
     if(mode==1){
-        // has mov
+        // has move
         if(to!=0){
-            if(board[s_y][s_x] == 7 && board[e_y][e_x] == 1){
-                board[s_y][s_x] = 1;
-                board[e_y][e_x] = 7;
-            }
+            board[s_y][s_x] = 1;
+            board[e_y][e_x] = 7;
         }
-        // no mov
+        // no move
         else{
-            if(board[s_y][s_x] == 1){
-                board[s_y][s_x] = 7;
-            }
+            board[s_y][s_x] = 7;
         }
     }
     // client
     else if(mode==2){
-        // has mov
+        // has move
         if(to!=0){
-            if(board[s_y][s_x] == 6 && board[e_y][e_x] == 1){
-                board[s_y][s_x] = 1;
-                board[e_y][e_x] = 6;
-            }
+            board[s_y][s_x] = 1;
+            board[e_y][e_x] = 6;
         }
-        // no mov
+        // no move
         else{
-            if(board[s_y][s_x] == 1){
-                board[s_y][s_x] = 6;
-            }
+            board[s_y][s_x] = 6;
         }
     }
-
     // paint
     for(int row=0; row<15 ; row++){
         for(int col=0; col<29 ; col++){

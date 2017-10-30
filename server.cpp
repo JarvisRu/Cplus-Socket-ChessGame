@@ -101,21 +101,21 @@ int main(){
                 while(!over){
                     // your run
                     if(run%2==0){
+                        if(run>=8) cout<<"(You can move now)"<<endl;
+                        while(true){
+                            cout<<"你的局(★)：";
+                            cin>>mov[0]>>mov[1]>>mov[2];
 
-                        cout<<"你的局(★)：";
-                        cin>>mov[0]>>mov[1]>>mov[2];
-
-                        system("cls");
-
-                        // has mov
-                        if((int)mov[2]-48!=0 && chess_s==3){
-                            paint(1,(int)mov[0]-48,(int)mov[2]-48);
+                            if(check(1,(int)mov[0]-48,(int)mov[2]-48,chess_s)){
+                                system("cls");
+                                paint(1,(int)mov[0]-48,(int)mov[2]-48);
+                                send(sConnect,mov,strlen(mov), 0);
+                                break;
+                            }
+                            else{
+                                cout<<"輸入有誤!! 請重新輸入"<<endl;
+                            }
                         }
-                        // no mov
-                        else if(chess_s!=3){
-                            paint(1,(int)mov[0]-48,0);
-                        }
-                        send(sConnect,mov,strlen(mov), 0);
 
                         chess_s = (chess_s < 3)? chess_s+1 : 3;
                         ++run;
@@ -129,21 +129,15 @@ int main(){
                     }
                     // player run
                     else{
+
                         cout<<"對方局(▲)"<<endl;
                         // get  message
                         char mov2[10];
                         ZeroMemory(mov2, 10);
                         recv(sConnect,mov2,sizeof(mov2),0);
-
-                        system("cls");
-
-                        // has mov
-                        if((int)mov2[2]-48!=0 && chess_c==3){
+                        if(check(2,(int)mov2[0]-48,(int)mov2[2]-48,chess_c)){
+                            system("cls");
                             paint(2,(int)mov2[0]-48,(int)mov2[2]-48);
-                        }
-                        // no mov
-                        else if(chess_c!=3){
-                            paint(2,(int)mov2[0]-48,0);
                         }
 
                         chess_c = (chess_c < 3)? chess_c+1 : 3;
@@ -160,7 +154,6 @@ int main(){
             }
             // player out
             else{
-                cout<<endl<<"Player leave !!";
                 Sleep(2000);
                 break;
             }
@@ -173,7 +166,7 @@ int main(){
     return 0;
 }
 
-void check(int mode, int mov, int to, int chessNum){
+bool check(int mode, int mov, int to, int chessNum){
     // get the coord of point
     switch(mov){
         case 1:
@@ -291,24 +284,24 @@ void check(int mode, int mov, int to, int chessNum){
 void paint(int mode,int mov, int to){
     // server
     if(mode==1){
-        // has mov
+        // has move
         if(to!=0){
             board[s_y][s_x] = 1;
             board[e_y][e_x] = 7;
         }
-        // no mov
+        // no move
         else{
             board[s_y][s_x] = 7;
         }
     }
     // client
     else if(mode==2){
-        // has mov
+        // has move
         if(to!=0){
             board[s_y][s_x] = 1;
             board[e_y][e_x] = 6;
         }
-        // no mov
+        // no move
         else{
             board[s_y][s_x] = 6;
         }

@@ -275,6 +275,10 @@ bool check(int mode, int mov, int to, int chessNum){
         if(abs(e_y-s_y)>7 || abs(e_x-s_x)>8){
             return false;
         }
+        // ban : 2<->4,2<->6,4<->8,6<->8
+        if((mov==2&&to==4)||(mov==4&&to==2)||(mov==2&&to==6)||(mov==6&&to==2)||(mov==4&&to==8)||(mov==8&&to==4)||(mov==6&&to==8)||(mov==8&&to==6)){
+            return false;
+        }
     }
     return true;
 }

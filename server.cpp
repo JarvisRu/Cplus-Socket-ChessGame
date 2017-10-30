@@ -326,22 +326,22 @@ bool win(){
     // scan row
     if(board[0][0]==6 && board[0][8]==6 && board[0][16]==6)         return true;
     else if(board[7][0]==6 && board[7][8]==6 && board[7][16]==6)    return true;
-    else if(board[13][0]==6 && board[13][8]==6 && board[13][16]==6) return true;
+    else if(board[14][0]==6 && board[14][8]==6 && board[14][16]==6) return true;
     else if(board[0][0]==7 && board[0][8]==7 && board[0][16]==7)    return true;
     else if(board[7][0]==7 && board[7][8]==7 && board[7][16]==7)    return true;
-    else if(board[13][0]==7 && board[13][8]==7 && board[13][16]==7) return true;
+    else if(board[14][0]==7 && board[14][8]==7 && board[14][16]==7) return true;
     // scan col
-    else if(board[0][0]==6 && board[7][0]==6 && board[13][0]==6)    return true;
-    else if(board[0][8]==6 && board[7][8]==6 && board[13][8]==6)    return true;
-    else if(board[0][16]==6 && board[7][16]==6 && board[13][16]==6) return true;
-    else if(board[0][0]==7 && board[7][0]==7 && board[13][0]==7)    return true;
-    else if(board[0][8]==7 && board[7][8]==7 && board[13][8]==7)    return true;
-    else if(board[0][16]==7 && board[7][16]==7 && board[13][16]==7) return true;
+    else if(board[0][0]==6 && board[7][0]==6 && board[14][0]==6)    return true;
+    else if(board[0][8]==6 && board[7][8]==6 && board[14][8]==6)    return true;
+    else if(board[0][16]==6 && board[7][16]==6 && board[14][16]==6) return true;
+    else if(board[0][0]==7 && board[7][0]==7 && board[14][0]==7)    return true;
+    else if(board[0][8]==7 && board[7][8]==7 && board[14][8]==7)    return true;
+    else if(board[0][16]==7 && board[7][16]==7 && board[14][16]==7) return true;
     // scan  slash
-    else if(board[0][0]==6 && board[7][8]==6 && board[13][16]==6)   return true;
-    else if(board[0][16]==6 && board[7][8]==6 && board[13][0]==6)   return true;
-    else if(board[0][0]==7 && board[7][8]==7 && board[13][16]==7)   return true;
-    else if(board[0][16]==7 && board[7][8]==7 && board[13][0]==7)   return true;
+    else if(board[0][0]==6 && board[7][8]==6 && board[14][16]==6)   return true;
+    else if(board[0][16]==6 && board[7][8]==6 && board[14][0]==6)   return true;
+    else if(board[0][0]==7 && board[7][8]==7 && board[14][16]==7)   return true;
+    else if(board[0][16]==7 && board[7][8]==7 && board[14][0]==7)   return true;
     else return false;
 }
 

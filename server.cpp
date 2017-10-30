@@ -9,7 +9,7 @@ using namespace std;
 
 // declare function
 void paint(int,int,int);        // paint board
-bool judge(int,int,int,int);    // judge if the input is correct and no conflict
+bool check(int,int,int,int);    // check if the input is correct and no conflict
 bool win();                     // judge if someone win
 void reBoard();                 // reassign value of board
 
@@ -30,6 +30,8 @@ int board[15][29]= {
         {5,0,4,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,3,0,5},
         {1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
+// assign value : start point & end point
+int s_x,s_y,e_x,e_y;
 
 int main(){
     WSADATA wsaData;
@@ -99,6 +101,7 @@ int main(){
                 while(!over){
                     // your run
                     if(run%2==0){
+
                         cout<<"§Aªº§½(¡¹)¡G";
                         cin>>mov[0]>>mov[1]>>mov[2];
 
@@ -170,10 +173,8 @@ int main(){
     return 0;
 }
 
-// do paint
-void paint(int mode,int mov, int to){
-    // assign value : start point & end point
-    int s_x,s_y,e_x,e_y;
+void check(int mode, int mov, int to, int chessNum){
+    // get the coord of point
     switch(mov){
         case 1:
             s_x = 0;
@@ -252,37 +253,64 @@ void paint(int mode,int mov, int to){
                 break;
         }
     }
+    // before can move
+    if(chessNum < 3){
+        // can't move
+        if(to!=0){
+            return false;
+        }
+        // can't set on chess which is set
+        if(board[s_y][s_x]!=1){
+            return false;
+        }
+    }
+    // can move
+    else{
+        // have to move
+        if(to==0){
+            return false;
+        }
+        // can't move others chess
+        if((mode==1 && board[s_y][s_x]==6) || (mode==2 && board[s_y][s_x]==7)){
+            return false;
+        }
+        // can't move to somewhere which is set
+        if(board[e_y][e_x]!=1){
+            return false;
+        }
+        // just can move to neighbor
+        if(abs(e_y-s_y)>7 || abs(e_x-s_x)>8){
+            return false;
+        }
+    }
+    return true;
+}
 
+
+// do paint
+void paint(int mode,int mov, int to){
     // server
     if(mode==1){
         // has mov
         if(to!=0){
-            if(board[s_y][s_x] == 7 && board[e_y][e_x] == 1){
-                board[s_y][s_x] = 1;
-                board[e_y][e_x] = 7;
-            }
+            board[s_y][s_x] = 1;
+            board[e_y][e_x] = 7;
         }
         // no mov
         else{
-            if(board[s_y][s_x] == 1){
-                board[s_y][s_x] = 7;
-            }
+            board[s_y][s_x] = 7;
         }
     }
     // client
     else if(mode==2){
         // has mov
         if(to!=0){
-            if(board[s_y][s_x] == 6 && board[e_y][e_x] == 1){
-                board[s_y][s_x] = 1;
-                board[e_y][e_x] = 6;
-            }
+            board[s_y][s_x] = 1;
+            board[e_y][e_x] = 6;
         }
         // no mov
         else{
-            if(board[s_y][s_x] == 1){
-                board[s_y][s_x] = 6;
-            }
+            board[s_y][s_x] = 6;
         }
     }
     // paint

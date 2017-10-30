@@ -48,9 +48,10 @@ int main(){
 
     // set server address information
     SOCKADDR_IN addr;
+    // addr.sin_addr.s_addr = inet_addr("6.5.42.6");
     addr.sin_addr.s_addr = inet_addr("127.0.0.1");
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(1234);
+    addr.sin_port = htons(123);
 
     // bind  : int bind (SOCKET s, const struct SOCKADDR* addr, int addrlen)
     // if success -> return 0
@@ -78,14 +79,13 @@ int main(){
         sendbuf = "Connect successfully to server¡I";
         send(sConnect, sendbuf, (int)strlen(sendbuf), 0);
 
-
         while(true){
             char message[100];
             ZeroMemory(message, 100);
             recv(sConnect,message,sizeof(message),0);
             cout<<message;
             // player in
-            if(message!="Player in !!"){
+            if(message[7]=='i'){
                 // initialize game setting
                 Sleep(1000);
                 system("cls");
@@ -157,7 +157,7 @@ int main(){
             }
             // player out
             else{
-                cout<<endl<<"Player leave ! Program will be closed !!";
+                cout<<endl<<"Player leave !!";
                 Sleep(2000);
                 break;
             }
@@ -165,6 +165,7 @@ int main(){
             reBoard();
         }
         closesocket(sConnect);
+
     }
     return 0;
 }

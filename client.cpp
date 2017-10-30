@@ -43,9 +43,10 @@ int main(){
     // Address information about where it want to connect
     SOCKADDR_IN addr;
     client_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    // addr.sin_addr.s_addr = inet_addr("6.5.42.6");
     addr.sin_addr.s_addr = inet_addr("127.0.0.1");
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(1234); // bind with TCP server port
+    addr.sin_port = htons(123); // bind with TCP server port
 
     // connect : int connect (SOCKET s, const struct sockaddr* addr, int addrlen)
     if(connect(client_socket,(SOCKADDR*)&addr, sizeof(addr))<0){
@@ -65,7 +66,7 @@ int main(){
         cout<<"================================================================================="<<endl;
         cout<<"1. 棋盤如下"<<endl;
         cout<<"2. 雙方各執三子，依序放入棋盤中，三子全下完後，才可移動"<<endl;
-        cout<<"3. 移動方式可直走，橫走，也可對角線走，先三子連成一線者獲勝（直線or斜線皆可）"<<endl;
+        cout<<"3. 移動方式可直走，橫走，也可對角線走（但只能移動到相鄰的），先三子連成一線者獲勝（直線or斜線皆可）"<<endl;
         cout<<"4. 下棋方式：輸入　1~9(代表點) + 0 + 0"<<endl;
         cout<<"  EX: 1 0 0 → 下在點1 (若輸入已存在於棋盤的自己棋→視為浪費一局)"<<endl;
         cout<<"  1 2 3\n  4 5 6\n  7 8 9\n";
@@ -162,7 +163,7 @@ int main(){
             // end the game
             else if(start==0){
                 cout<<endl<<"Leaving the game ! Program will be closed !!";
-                sendbuf="玩家離開";
+                sendbuf="Player leave !!";
                 send(client_socket, sendbuf, (int)strlen(sendbuf), 0);
 
                 Sleep(2000);
@@ -179,13 +180,6 @@ int main(){
             }
         }
     }
-    // send : int send (SOCKET s, const char* buffer, int len, int flags)
-//     char *sendbuf = "sending test!";
-//     send(client_socket, sendbuf, sizeof(sendbuf), 0);
-
-    // recv : int recv (SOCKET s, char *buf, int len, int flags)
-
-    // closesocket(client_socket);
     return 0;
 }
 

@@ -46,8 +46,27 @@ int main(){
     // Address information about where it want to connect
     SOCKADDR_IN addr;
     client_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    // addr.sin_addr.s_addr = inet_addr("6.5.42.6");
-    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    while(true){
+        cout<<"Please choose (1)Setting Server IP (2)Own(127.0.0.1) :";
+        int IPset=0;
+        cin>>IPset;
+        if(IPset==1){
+            string IP;
+            cout<<"IP:";
+            cin>>IP;
+            addr.sin_addr.s_addr = inet_addr(IP.c_str());
+            cout<<"Setting "<<IP<<" as Server IP, waiting for connection"<<endl;
+            break;
+        }
+        else if(IPset==2){
+            addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+            cout<<"Connect to own, waiting for connection"<<endl;
+            break;
+        }
+        else{
+            cout<<"Error input ! Plz input 1 or 2"<<endl;
+        }
+    }
     addr.sin_family = AF_INET;
     addr.sin_port = htons(123); // bind with TCP server port
 
@@ -71,11 +90,12 @@ int main(){
         cout<<"2. 雙方各執三子，依序放入棋盤中，三子全下完後，才可移動"<<endl;
         cout<<"3. 移動方式可直走、橫走，也可對角線走（如圖），先三子連成一線者獲勝（直線、斜線皆可）"<<endl;
         cout<<"4. 下棋方式：輸入　1~9(代表點) + 0 + 0"<<endl;
-        cout<<"  EX: 1 0 0 → 下在點1"<<endl;
+        cout<<"  EX: 100 → 下在點1"<<endl;
         cout<<"  1 2 3\n  4 5 6\n  7 8 9\n";
         cout<<"5. 移動方式：輸入 起始點 + 0 + 移動到的點"<<endl;
-        cout<<"  EX: 1 0 5 → 點1移動到點5"<<endl;
-        cout<<"6. Player代表:▲  Server代表:★"<<endl;
+        cout<<"  EX: 105 → 點1移動到點5"<<endl;
+        cout<<"6. 若輸入格式錯誤，需重新輸入直到正確"<<endl;
+        cout<<"7. Player代表:▲  Server代表:★"<<endl;
         cout<<"================================================================================="<<endl;
         paint(0,0,0);
         cout<<"開始遊戲 ? (1)開始 (0)結束 :";
@@ -95,7 +115,6 @@ int main(){
                 system("cls");
                 paint(0,0,0);
 
-
                 int run = 1;
                 int chess_s = 0, chess_c = 0;
                 char mov[3];
@@ -109,15 +128,18 @@ int main(){
                             cout<<"你的局(▲)：";
                             cin>>mov[0]>>mov[1]>>mov[2];
 
-                            if(check(2,(int)mov[0]-48,(int)mov[2]-48,chess_c)){
+                            if(mov[1]!='0')
+                                cout<<"輸入有誤!! 請重新輸入"<<endl;
+                            else if(mov[0]=='0')
+                                cout<<"輸入有誤!! 請重新輸入"<<endl;
+                            else if(check(2,(int)mov[0]-48,(int)mov[2]-48,chess_c)){
                                 system("cls");
                                 paint(2,(int)mov[0]-48,(int)mov[2]-48);
                                 send(client_socket,mov,strlen(mov), 0);
                                 break;
                             }
-                            else{
+                            else
                                 cout<<"輸入有誤!! 請重新輸入"<<endl;
-                            }
                         }
 
                         chess_c = (chess_c < 3)? chess_c+1 : 3;
@@ -141,6 +163,13 @@ int main(){
                         if(check(1,(int)mov2[0]-48,(int)mov2[2]-48,chess_s)){
                             system("cls");
                             paint(1,(int)mov2[0]-48,(int)mov2[2]-48);
+                        }
+                        // if Server leave
+                        else{
+                            cout<<"Server Leave !! Exit program in 3 sec";
+                            Sleep(3000);
+                            closesocket(client_socket);
+                            return 0;
                         }
 
                         chess_s = (chess_s < 3)? chess_s+1 : 3;
@@ -257,8 +286,10 @@ bool check(int mode, int mov, int to, int chessNum){
                 e_x = 16;
                 e_y = 14;
                 break;
+
         }
     }
+
     // before can move
     if(chessNum < 3){
         // can't move

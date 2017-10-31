@@ -50,8 +50,27 @@ int main(){
 
     // set server address information
     SOCKADDR_IN addr;
-    // addr.sin_addr.s_addr = inet_addr("6.5.42.6");
-    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    while(true){
+        cout<<"Please choose (1)Setting Server IP (2)Own(127.0.0.1) :";
+        int IPset=0;
+        cin>>IPset;
+        if(IPset==1){
+            string IP;
+            cout<<"IP:";
+            cin>>IP;
+            addr.sin_addr.s_addr = inet_addr(IP.c_str());
+            cout<<"Setting "<<IP<<" as Server IP, plz inform client to change IP"<<endl;
+            break;
+        }
+        else if(IPset==2){
+            addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+            cout<<"Connect to own, waiting for connection"<<endl;
+            break;
+        }
+        else{
+            cout<<"Error input ! Plz input 1 or 2"<<endl;
+        }
+    }
     addr.sin_family = AF_INET;
     addr.sin_port = htons(123);
 
@@ -105,16 +124,18 @@ int main(){
                         while(true){
                             cout<<"你的局(★)：";
                             cin>>mov[0]>>mov[1]>>mov[2];
-
-                            if(check(1,(int)mov[0]-48,(int)mov[2]-48,chess_s)){
+                            if(mov[1]!='0')
+                                cout<<"輸入有誤!! 請重新輸入"<<endl;
+                            else if(mov[0]=='0')
+                                cout<<"輸入有誤!! 請重新輸入"<<endl;
+                            else if(check(1,(int)mov[0]-48,(int)mov[2]-48,chess_s)){
                                 system("cls");
                                 paint(1,(int)mov[0]-48,(int)mov[2]-48);
                                 send(sConnect,mov,strlen(mov), 0);
                                 break;
                             }
-                            else{
+                            else
                                 cout<<"輸入有誤!! 請重新輸入"<<endl;
-                            }
                         }
 
                         chess_s = (chess_s < 3)? chess_s+1 : 3;
@@ -138,6 +159,13 @@ int main(){
                         if(check(2,(int)mov2[0]-48,(int)mov2[2]-48,chess_c)){
                             system("cls");
                             paint(2,(int)mov2[0]-48,(int)mov2[2]-48);
+                        }
+                        // if Client leave
+                        else{
+                            cout<<"Player Leave !! Exit program in 3 sec";
+                            Sleep(3000);
+                            closesocket(sConnect);
+                            return 0;
                         }
 
                         chess_c = (chess_c < 3)? chess_c+1 : 3;

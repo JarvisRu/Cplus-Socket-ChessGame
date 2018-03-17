@@ -9,10 +9,10 @@
 using namespace std;
 
 // declare function
-void paint(int,int,int);        // paint board
-bool check(int,int,int,int);    // check if the input is correct and no conflict
-bool win();                     // judge if someone win
-void reBoard();                 // reassign value of board
+void paint(int, int, int);        // paint board
+bool check(int, int, int, int);   // check if the input is correct and no conflict
+bool win();                       // judge if someone win
+void reBoard();                   // reassign value of board
 
 int board[15][29]= {
         {1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -32,82 +32,82 @@ int board[15][29]= {
         {1,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
 // assign value : start point & end point
-int s_x,s_y,e_x,e_y;
+int s_x, s_y, e_x, e_y;
 
 int main(){
     WSADATA wsaData;
     WORD version = MAKEWORD(2,1); // version
     int result = WSAStartup(version, &wsaData); // success -> return 0
-    if(result){
-        cout<<"WinSock initialize error ! ";
+    if(result) {
+        cout << "WinSock initialize error ! ";
     }
 
     SOCKET client_socket;
     // Address information about where it want to connect
     SOCKADDR_IN addr;
     client_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    while(true){
-        cout<<"Please choose (1)Setting Server IP (2)Own(127.0.0.1) :";
+    while(true) {
+        cout << "Please choose (1)Setting Server IP (2)Own(127.0.0.1) :";
         int IPset=0;
-        cin>>IPset;
-        if(IPset==1){
+        cin >> IPset;
+        if(IPset == 1) {
             string IP;
-            cout<<"IP:";
-            cin>>IP;
+            cout << "IP:";
+            cin >> IP;
             addr.sin_addr.s_addr = inet_addr(IP.c_str());
-            cout<<"Setting "<<IP<<" as Server IP, waiting for connection"<<endl;
+            cout << "Setting " << IP << " as Server IP, waiting for connection" << endl;
             break;
         }
-        else if(IPset==2){
+        else if(IPset == 2) {
             addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-            cout<<"Connect to own, waiting for connection"<<endl;
+            cout <<"Connect to own, waiting for connection" << endl;
             break;
         }
         else{
-            cout<<"Error input ! Plz input 1 or 2"<<endl;
+            cout << "Error input ! Plz input 1 or 2" << endl;
         }
     }
     addr.sin_family = AF_INET;
     addr.sin_port = htons(123); // bind with TCP server port
 
     // connect : int connect (SOCKET s, const struct sockaddr* addr, int addrlen)
-    if(connect(client_socket,(SOCKADDR*)&addr, sizeof(addr))<0){
-        cout<<"³s½u¥¢±Ñ!½Ð½T»{serverºÝ¤w¶}±Ò ";
+    if(connect(client_socket,(SOCKADDR*)&addr, sizeof(addr))<0) {
+        cout << "ï¿½sï¿½uï¿½ï¿½ï¿½ï¿½!ï¿½Ð½Tï¿½{serverï¿½Ý¤wï¿½}ï¿½ï¿½ ";
     }
     else{
         char message[100];
         ZeroMemory(message, 100);
-        recv(client_socket,message,sizeof(message),0);
-        cout<<message<<endl;
+        recv(client_socket, message, sizeof(message), 0);
+        cout << message << endl;
 
         Sleep(1000);
         system("cls");
 
-        //³W«h»¡©ú
-        cout<<"¡i¤T¤l´Ñ¡j"<<endl;
-        cout<<"================================================================================="<<endl;
-        cout<<"1. ´Ñ½L¦p¤U"<<endl;
-        cout<<"2. Âù¤è¦U°õ¤T¤l¡A¨Ì§Ç©ñ¤J´Ñ½L¤¤¡A¤T¤l¥þ¤U§¹«á¡A¤~¥i²¾°Ê"<<endl;
-        cout<<"3. ²¾°Ê¤è¦¡¥iª½¨«¡B¾î¨«¡A¤]¥i¹ï¨¤½u¨«¡]¦p¹Ï¡^¡A¥ý¤T¤l³s¦¨¤@½uªÌÀò³Ó¡]ª½½u¡B±×½u¬Ò¥i¡^"<<endl;
-        cout<<"4. ¤U´Ñ¤è¦¡¡G¿é¤J¡@1~9(¥NªíÂI) + 0 + 0"<<endl;
-        cout<<"  EX: 100 ¡÷ ¤U¦bÂI1"<<endl;
-        cout<<"  1 2 3\n  4 5 6\n  7 8 9\n";
-        cout<<"5. ²¾°Ê¤è¦¡¡G¿é¤J °_©lÂI + 0 + ²¾°Ê¨ìªºÂI"<<endl;
-        cout<<"  EX: 105 ¡÷ ÂI1²¾°Ê¨ìÂI5"<<endl;
-        cout<<"6. ­Y¿é¤J®æ¦¡¿ù»~¡A»Ý­«·s¿é¤Jª½¨ì¥¿½T"<<endl;
-        cout<<"7. Player¥Nªí:¡¶  Server¥Nªí:¡¹"<<endl;
-        cout<<"================================================================================="<<endl;
+        // for rule
+        cout << "ï¿½iï¿½Tï¿½lï¿½Ñ¡j" << endl;
+        cout << "=================================================================================" << endl;
+        cout << "1. ï¿½Ñ½Lï¿½pï¿½U" << endl;
+        cout << "2. ï¿½ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½Tï¿½lï¿½Aï¿½Ì§Ç©ï¿½Jï¿½Ñ½Lï¿½ï¿½ï¿½Aï¿½Tï¿½lï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½ï¿½Aï¿½~ï¿½iï¿½ï¿½ï¿½ï¿½" << endl;
+        cout << "3. ï¿½ï¿½ï¿½Ê¤è¦¡ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Bï¿½î¨«ï¿½Aï¿½]ï¿½iï¿½ï¨¤ï¿½uï¿½ï¿½ï¿½]ï¿½pï¿½Ï¡^ï¿½Aï¿½ï¿½ï¿½Tï¿½lï¿½sï¿½ï¿½ï¿½@ï¿½uï¿½ï¿½ï¿½ï¿½Ó¡]ï¿½ï¿½ï¿½uï¿½Bï¿½×½uï¿½Ò¥iï¿½^" << endl;
+        cout << "4. ï¿½Uï¿½Ñ¤è¦¡ï¿½Gï¿½ï¿½Jï¿½@1~9(ï¿½Nï¿½ï¿½ï¿½I) + 0 + 0" << endl;
+        cout << "  EX: 100 ï¿½ï¿½ ï¿½Uï¿½bï¿½I1" << endl;
+        cout << "  1 2 3\n  4 5 6\n  7 8 9\n";
+        cout << "5. ï¿½ï¿½ï¿½Ê¤è¦¡ï¿½Gï¿½ï¿½J ï¿½_ï¿½lï¿½I + 0 + ï¿½ï¿½ï¿½Ê¨ìªºï¿½I" << endl;
+        cout << "  EX: 105 ï¿½ï¿½ ï¿½I1ï¿½ï¿½ï¿½Ê¨ï¿½ï¿½I5" << endl;
+        cout << "6. ï¿½Yï¿½ï¿½Jï¿½æ¦¡ï¿½ï¿½ï¿½~ï¿½Aï¿½Ý­ï¿½ï¿½sï¿½ï¿½Jï¿½ï¿½ï¿½ì¥¿ï¿½T" << endl;
+        cout << "7. Playerï¿½Nï¿½ï¿½:ï¿½ï¿½  Serverï¿½Nï¿½ï¿½:ï¿½ï¿½" << endl;
+        cout << "=================================================================================" << endl;
         paint(0,0,0);
-        cout<<"¶}©l¹CÀ¸ ? (1)¶}©l (0)µ²§ô :";
+        cout << "ï¿½}ï¿½lï¿½Cï¿½ï¿½ ? (1)ï¿½}ï¿½l (0)ï¿½ï¿½ï¿½ï¿½ :";
 
         char *sendbuf = new char[100];
         int start = 0;
         bool over;
 
-        while(cin>>start){
+        while(cin >> start) {
            // start the game
-            if(start==1){
-                sendbuf="Player in !!";
+            if(start == 1) {
+                sendbuf = "Player in !!";
                 send(client_socket, sendbuf, (int)strlen(sendbuf), 0);
 
                 // initialize game setting
@@ -120,34 +120,34 @@ int main(){
                 char mov[3];
                 over = false;
                 // start to play
-                while(!over){
+                while( !over ) {
                     // your run
-                    if(run%2==1){
-                        if(run>=7) cout<<"(You can move now)"<<endl;
-                        while(true){
-                            cout<<"§Aªº§½(¡¶)¡G";
-                            cin>>mov[0]>>mov[1]>>mov[2];
+                    if(run%2 == 1) {
+                        if(run >= 7) cout << "(You can move now)" << endl;
+                        while( true ) {
+                            cout << "ï¿½Aï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½)ï¿½G";
+                            cin >> mov[0] >> mov[1] >> mov[2];
 
-                            if(mov[1]!='0')
-                                cout<<"¿é¤J¦³»~!! ½Ð­«·s¿é¤J"<<endl;
-                            else if(mov[0]=='0')
-                                cout<<"¿é¤J¦³»~!! ½Ð­«·s¿é¤J"<<endl;
-                            else if(check(2,(int)mov[0]-48,(int)mov[2]-48,chess_c)){
+                            if(mov[1] != '0')
+                                cout << "ï¿½ï¿½Jï¿½ï¿½ï¿½~!! ï¿½Ð­ï¿½ï¿½sï¿½ï¿½J" << endl;
+                            else if(mov[0] == '0')
+                                cout << "ï¿½ï¿½Jï¿½ï¿½ï¿½~!! ï¿½Ð­ï¿½ï¿½sï¿½ï¿½J" << endl;
+                            else if(check(2, (int)mov[0]-48, (int)mov[2]-48, chess_c)) {
                                 system("cls");
-                                paint(2,(int)mov[0]-48,(int)mov[2]-48);
-                                send(client_socket,mov,strlen(mov), 0);
+                                paint(2, (int)mov[0]-48, (int)mov[2]-48);
+                                send(client_socket, mov, strlen(mov), 0);
                                 break;
                             }
                             else
-                                cout<<"¿é¤J¦³»~!! ½Ð­«·s¿é¤J"<<endl;
+                                cout << "ï¿½ï¿½Jï¿½ï¿½ï¿½~!! ï¿½Ð­ï¿½ï¿½sï¿½ï¿½J" << endl;
                         }
 
                         chess_c = (chess_c < 3)? chess_c+1 : 3;
                         ++run;
 
                         // judge if win
-                        if(win()==true){
-                            cout<<endl<<"You win !! Server lose ~"<<endl;
+                        if(win() == true){
+                            cout << endl << "You win !! Server lose ~" << endl;
                             Sleep(3000);
                             over = true;
                             reBoard();
@@ -155,18 +155,18 @@ int main(){
                     }
                     // player run
                     else{
-                        cout<<"¹ï¤è§½(¡¹)"<<endl;
+                        cout << "ï¿½ï¿½è§½(ï¿½ï¿½)" << endl;
                         // get  message
                         char mov2[10];
                         ZeroMemory(mov2, 10);
-                        recv(client_socket,mov2,sizeof(mov2),0);
-                        if(check(1,(int)mov2[0]-48,(int)mov2[2]-48,chess_s)){
+                        recv(client_socket,mov2, sizeof(mov2), 0);
+                        if(check(1, (int)mov2[0]-48, (int)mov2[2]-48, chess_s)) {
                             system("cls");
-                            paint(1,(int)mov2[0]-48,(int)mov2[2]-48);
+                            paint(1, (int)mov2[0]-48, (int)mov2[2]-48);
                         }
                         // if Server leave
                         else{
-                            cout<<"Server Leave !! Exit program in 3 sec";
+                            cout << "Server Leave !! Exit program in 3 sec";
                             Sleep(3000);
                             closesocket(client_socket);
                             return 0;
@@ -176,8 +176,8 @@ int main(){
                         ++run;
 
                         // judge if win
-                        if(win()==true){
-                            cout<<endl<<"Server win !! You lose ~"<<endl;
+                        if(win() == true) {
+                            cout << endl << "Server win !! You lose ~ " << endl;
                             Sleep(3000);
                             over = true;
                             reBoard();
@@ -186,9 +186,9 @@ int main(){
                 }
             }
             // end the game
-            else if(start==0){
-                cout<<endl<<"Leaving the game ! Program will be closed !!";
-                sendbuf="Player leave !!";
+            else if(start == 0) {
+                cout << endl << "Leaving the game ! Program will be closed !!";
+                sendbuf = "Player leave !!";
                 send(client_socket, sendbuf, (int)strlen(sendbuf), 0);
 
                 Sleep(2000);
@@ -197,11 +197,11 @@ int main(){
             }
             // if input wrong
             else{
-                cout<<"½Ð¿é¤J ¼Æ¦r1(¶}©l) ©Î ¼Æ¦r0(µ²§ô):";
+                cout << "ï¿½Ð¿ï¿½J ï¿½Æ¦r1(ï¿½}ï¿½l) ï¿½ï¿½ ï¿½Æ¦r0(ï¿½ï¿½ï¿½ï¿½):";
             }
 
-            if(over==true){
-                cout<<"Ä~Äò¹CÀ¸ ? (1)¶}©l (0)µ²§ô :";
+            if(over == true) {
+                cout << "ï¿½~ï¿½ï¿½Cï¿½ï¿½ ? (1)ï¿½}ï¿½l (0)ï¿½ï¿½ï¿½ï¿½ :";
             }
         }
     }
@@ -210,7 +210,7 @@ int main(){
 
 bool check(int mode, int mov, int to, int chessNum){
     // get the coord of point
-    switch(mov){
+    switch(mov) {
         case 1:
             s_x = 0;
             s_y = 0;
@@ -248,8 +248,8 @@ bool check(int mode, int mov, int to, int chessNum){
             s_y = 14;
             break;
     }
-    if(to!=0){
-        switch(to){
+    if(to != 0) {
+        switch(to) {
             case 1:
                 e_x = 0;
                 e_y = 0;
@@ -291,36 +291,36 @@ bool check(int mode, int mov, int to, int chessNum){
     }
 
     // before can move
-    if(chessNum < 3){
+    if(chessNum < 3) {
         // can't move
-        if(to!=0){
+        if(to != 0) {
             return false;
         }
         // can't set on chess which is set
-        if(board[s_y][s_x]!=1){
+        if(board[s_y][s_x]!=1) {
             return false;
         }
     }
     // can move
-    else{
+    else {
         // have to move
-        if(to==0){
+        if(to == 0) {
             return false;
         }
         // can't move others chess
-        if((mode==1 && board[s_y][s_x]==6) || (mode==2 && board[s_y][s_x]==7)){
+        if((mode==1 && board[s_y][s_x]==6) || (mode==2 && board[s_y][s_x]==7)) {
             return false;
         }
         // can't move to somewhere which is set
-        if(board[e_y][e_x]!=1){
+        if(board[e_y][e_x]!=1) {
             return false;
         }
         // just can move to neighbor
-        if(abs(e_y-s_y)>7 || abs(e_x-s_x)>8){
+        if(abs(e_y-s_y)>7 || abs(e_x-s_x)>8) {
             return false;
         }
         // ban : 2<->4,2<->6,4<->8,6<->8
-        if((mov==2&&to==4)||(mov==4&&to==2)||(mov==2&&to==6)||(mov==6&&to==2)||(mov==4&&to==8)||(mov==8&&to==4)||(mov==6&&to==8)||(mov==8&&to==6)){
+        if((mov==2 && to==4)||(mov==4 && to==2)||(mov==2 && to==6)||(mov==6 && to==2)||(mov==4 && to==8)||(mov==8 && to==4)||(mov==6 && to==8)||(mov==8 && to==6)) {
             return false;
         }
     }
@@ -329,69 +329,69 @@ bool check(int mode, int mov, int to, int chessNum){
 
 
 // do paint
-void paint(int mode,int mov, int to){
+void paint(int mode,int mov, int to) {
     // server
-    if(mode==1){
+    if(mode == 1) {
         // has move
-        if(to!=0){
+        if(to != 0) {
             board[s_y][s_x] = 1;
             board[e_y][e_x] = 7;
         }
         // no move
-        else{
+        else {
             board[s_y][s_x] = 7;
         }
     }
     // client
-    else if(mode==2){
+    else if(mode == 2) {
         // has move
-        if(to!=0){
+        if(to != 0) {
             board[s_y][s_x] = 1;
             board[e_y][e_x] = 6;
         }
         // no move
-        else{
+        else {
             board[s_y][s_x] = 6;
         }
     }
     // paint
-    for(int row=0; row<15 ; row++){
-        for(int col=0; col<29 ; col++){
-            switch(board[row][col]){
+    for(int row=0; row<15 ; row++) {
+        for(int col=0; col<29 ; col++) {
+            switch(board[row][col]) {
                 case 0:
-                    cout<<" ";
+                    cout << " ";
                     break;
                 case 1:
-                    cout<<"¡º";
+                    cout << "â—‡";
                     break;
                 case 2:
-                    cout<<"¡X";
+                    cout << "â€”";
                     break;
                 case 3:
-                    cout<<"¢@";
+                    cout << "ï¼¼";
                     break;
                 case 4:
-                    cout<<"¡þ";
+                    cout << "ï¼";
                     break;
                 case 5:
-                    cout<<"¡W";
+                    cout << "ï¸±";
                     break;
                 // client
                 case 6:
-                    cout<<"¡¶";
+                    cout << "â–²";
                     break;
                 // server
                 case 7:
-                    cout<<"¡¹";
+                    cout << "â˜…";
                     break;
 
             }
         }
-        cout<<endl;
+        cout << endl;
     }
 }
 
-bool win(){
+bool win() {
     // scan row
     if(board[0][0]==6 && board[0][8]==6 && board[0][16]==6)         return true;
     else if(board[7][0]==6 && board[7][8]==6 && board[7][16]==6)    return true;
@@ -414,8 +414,8 @@ bool win(){
     else return false;
 }
 
-void reBoard(){
-    for(int i=0 ; i<=16 ; i+=8){
+void reBoard() {
+    for(int i=0 ; i<=16 ; i+=8) {
         board[0][i] = 1;
         board[7][i] = 1;
         board[14][i] = 1;

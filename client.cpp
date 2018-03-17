@@ -72,7 +72,7 @@ int main(){
 
     // connect : int connect (SOCKET s, const struct sockaddr* addr, int addrlen)
     if(connect(client_socket,(SOCKADDR*)&addr, sizeof(addr))<0) {
-        cout << "ï¿½sï¿½uï¿½ï¿½ï¿½ï¿½!ï¿½Ð½Tï¿½{serverï¿½Ý¤wï¿½}ï¿½ï¿½ ";
+        cout << "³s½u¥¢±Ñ!½Ð½T»{serverºÝ¤w¶}±Ò " ;
     }
     else{
         char message[100];
@@ -83,22 +83,22 @@ int main(){
         Sleep(1000);
         system("cls");
 
-        // for rule
-        cout << "ï¿½iï¿½Tï¿½lï¿½Ñ¡j" << endl;
+        //³W«h»¡©ú
+        cout << "¡i¤T¤l´Ñ¡j" << endl;
         cout << "=================================================================================" << endl;
-        cout << "1. ï¿½Ñ½Lï¿½pï¿½U" << endl;
-        cout << "2. ï¿½ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½Tï¿½lï¿½Aï¿½Ì§Ç©ï¿½Jï¿½Ñ½Lï¿½ï¿½ï¿½Aï¿½Tï¿½lï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½ï¿½Aï¿½~ï¿½iï¿½ï¿½ï¿½ï¿½" << endl;
-        cout << "3. ï¿½ï¿½ï¿½Ê¤è¦¡ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Bï¿½î¨«ï¿½Aï¿½]ï¿½iï¿½ï¨¤ï¿½uï¿½ï¿½ï¿½]ï¿½pï¿½Ï¡^ï¿½Aï¿½ï¿½ï¿½Tï¿½lï¿½sï¿½ï¿½ï¿½@ï¿½uï¿½ï¿½ï¿½ï¿½Ó¡]ï¿½ï¿½ï¿½uï¿½Bï¿½×½uï¿½Ò¥iï¿½^" << endl;
-        cout << "4. ï¿½Uï¿½Ñ¤è¦¡ï¿½Gï¿½ï¿½Jï¿½@1~9(ï¿½Nï¿½ï¿½ï¿½I) + 0 + 0" << endl;
-        cout << "  EX: 100 ï¿½ï¿½ ï¿½Uï¿½bï¿½I1" << endl;
+        cout << "1. ´Ñ½L¦p¤U" << endl;
+        cout << "2. Âù¤è¦U°õ¤T¤l¡A¨Ì§Ç©ñ¤J´Ñ½L¤¤¡A¤T¤l¥þ¤U§¹«á¡A¤~¥i²¾°Ê" << endl;
+        cout << "3. ²¾°Ê¤è¦¡¥iª½¨«¡B¾î¨«¡A¤]¥i¹ï¨¤½u¨«¡]¦p¹Ï¡^¡A¥ý¤T¤l³s¦¨¤@½uªÌÀò³Ó¡]ª½½u¡B±×½u¬Ò¥i¡^" << endl;
+        cout << "4. ¤U´Ñ¤è¦¡¡G¿é¤J¡@1~9(¥NªíÂI) + 0 + 0" << endl;
+        cout << "  EX: 100 ¡÷ ¤U¦bÂI1" << endl;
         cout << "  1 2 3\n  4 5 6\n  7 8 9\n";
-        cout << "5. ï¿½ï¿½ï¿½Ê¤è¦¡ï¿½Gï¿½ï¿½J ï¿½_ï¿½lï¿½I + 0 + ï¿½ï¿½ï¿½Ê¨ìªºï¿½I" << endl;
-        cout << "  EX: 105 ï¿½ï¿½ ï¿½I1ï¿½ï¿½ï¿½Ê¨ï¿½ï¿½I5" << endl;
-        cout << "6. ï¿½Yï¿½ï¿½Jï¿½æ¦¡ï¿½ï¿½ï¿½~ï¿½Aï¿½Ý­ï¿½ï¿½sï¿½ï¿½Jï¿½ï¿½ï¿½ì¥¿ï¿½T" << endl;
-        cout << "7. Playerï¿½Nï¿½ï¿½:ï¿½ï¿½  Serverï¿½Nï¿½ï¿½:ï¿½ï¿½" << endl;
+        cout << "5. ²¾°Ê¤è¦¡¡G¿é¤J °_©lÂI + 0 + ²¾°Ê¨ìªºÂI" << endl;
+        cout << "  EX: 105 ¡÷ ÂI1²¾°Ê¨ìÂI5" << endl;
+        cout << "6. ­Y¿é¤J®æ¦¡¿ù»~¡A»Ý­«·s¿é¤Jª½¨ì¥¿½T" << endl;
+        cout << "7. Player¥Nªí:¡¶  Server¥Nªí:¡¹" << endl;
         cout << "=================================================================================" << endl;
         paint(0,0,0);
-        cout << "ï¿½}ï¿½lï¿½Cï¿½ï¿½ ? (1)ï¿½}ï¿½l (0)ï¿½ï¿½ï¿½ï¿½ :";
+        cout << "¶}©l¹CÀ¸ ? (1)¶}©l (0)µ²§ô :";
 
         char *sendbuf = new char[100];
         int start = 0;
@@ -125,13 +125,13 @@ int main(){
                     if(run%2 == 1) {
                         if(run >= 7) cout << "(You can move now)" << endl;
                         while( true ) {
-                            cout << "ï¿½Aï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½)ï¿½G";
+                            cout << "§Aªº§½(¡¶)¡G";
                             cin >> mov[0] >> mov[1] >> mov[2];
 
                             if(mov[1] != '0')
-                                cout << "ï¿½ï¿½Jï¿½ï¿½ï¿½~!! ï¿½Ð­ï¿½ï¿½sï¿½ï¿½J" << endl;
+                                cout << "¿é¤J¦³»~!! ½Ð­«·s¿é¤J" << endl;
                             else if(mov[0] == '0')
-                                cout << "ï¿½ï¿½Jï¿½ï¿½ï¿½~!! ï¿½Ð­ï¿½ï¿½sï¿½ï¿½J" << endl;
+                                cout << "¿é¤J¦³»~!! ½Ð­«·s¿é¤J" << endl;
                             else if(check(2, (int)mov[0]-48, (int)mov[2]-48, chess_c)) {
                                 system("cls");
                                 paint(2, (int)mov[0]-48, (int)mov[2]-48);
@@ -139,7 +139,7 @@ int main(){
                                 break;
                             }
                             else
-                                cout << "ï¿½ï¿½Jï¿½ï¿½ï¿½~!! ï¿½Ð­ï¿½ï¿½sï¿½ï¿½J" << endl;
+                                cout << "¿é¤J¦³»~!! ½Ð­«·s¿é¤J" << endl;
                         }
 
                         chess_c = (chess_c < 3)? chess_c+1 : 3;
@@ -155,7 +155,7 @@ int main(){
                     }
                     // player run
                     else{
-                        cout << "ï¿½ï¿½è§½(ï¿½ï¿½)" << endl;
+                        cout << "¹ï¤è§½(¡¹)" << endl;
                         // get  message
                         char mov2[10];
                         ZeroMemory(mov2, 10);
@@ -197,11 +197,11 @@ int main(){
             }
             // if input wrong
             else{
-                cout << "ï¿½Ð¿ï¿½J ï¿½Æ¦r1(ï¿½}ï¿½l) ï¿½ï¿½ ï¿½Æ¦r0(ï¿½ï¿½ï¿½ï¿½):";
+                cout << "½Ð¿é¤J ¼Æ¦r1(¶}©l) ©Î ¼Æ¦r0(µ²§ô):";
             }
 
             if(over == true) {
-                cout << "ï¿½~ï¿½ï¿½Cï¿½ï¿½ ? (1)ï¿½}ï¿½l (0)ï¿½ï¿½ï¿½ï¿½ :";
+                cout << "Ä~Äò¹CÀ¸ ? (1)¶}©l (0)µ²§ô :"; 
             }
         }
     }
@@ -362,27 +362,27 @@ void paint(int mode,int mov, int to) {
                     cout << " ";
                     break;
                 case 1:
-                    cout << "â—‡";
+                    cout << "¡º";
                     break;
                 case 2:
-                    cout << "â€”";
+                    cout << "¡X";
                     break;
                 case 3:
-                    cout << "ï¼¼";
+                    cout << "¢@";
                     break;
                 case 4:
-                    cout << "ï¼";
+                    cout << "¡þ";
                     break;
                 case 5:
-                    cout << "ï¸±";
+                    cout << "¡W";
                     break;
                 // client
                 case 6:
-                    cout << "â–²";
+                    cout << "¡¶";
                     break;
                 // server
                 case 7:
-                    cout << "â˜…";
+                    cout << "¡¹";
                     break;
 
             }
